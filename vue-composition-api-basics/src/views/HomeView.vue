@@ -9,6 +9,8 @@
       <button class="btn" @click="increaseCounter">+</button>
     </div>
 
+    <h4>The first counter number is {{ counterOddEven }}</h4>
+
     <div class="edit">
       <h4>Edit counter title:</h4>
       <input v-model="counterTitle" text="input" />
@@ -22,6 +24,8 @@
       <button class="btn" @click="increaseCounterTwo(1)">+ 1</button>
       <button class="btn" @click="increaseCounterTwo(10)">+ 10</button>
     </div>
+
+    <h5 v-if="showWarning" class="watcher-warning">{{ watcherWarning }}</h5>
   </div>
 </template>
 
@@ -59,7 +63,8 @@ export default {
 </script> -->
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { computed } from '@vue/reactivity'
+import { reactive, ref, watch } from 'vue'
 
 // Use non-reactive Data for best performance if you don't need it to change.
 const appTitle = 'My Amazing Counter App'
@@ -75,12 +80,21 @@ const otherCounterData = reactive({
 const increaseCounter = () => counter.value++
 const decreaseCounter = () => counter.value--
 
+const counterOddEven = computed(() => (counter.value % 2 === 0 ? 'even' : 'odd'))
+
 const increaseCounterTwo = (amount) => (otherCounterData.count += amount)
 // Passing also the $event
 const decreaseCounterTwo = (amount, evt) => {
   console.log(evt)
   otherCounterData.count -= amount
 }
+
+const watcherWarning = 'The second counter was increased by 10!'
+const showWarning = ref(false)
+watch(
+  () => otherCounterData.count,
+  (newCount, oldCount) => (showWarning.value = newCount > oldCount + 9)
+)
 </script>
 
 <style>
@@ -105,5 +119,10 @@ const decreaseCounterTwo = (amount, evt) => {
 
 .btn {
   cursor: pointer;
+}
+
+.watcher-warning {
+  margin-top: 1rem;
+  color: brown;
 }
 </style>
