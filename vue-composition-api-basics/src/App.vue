@@ -9,6 +9,14 @@ import { RouterLink, RouterView } from 'vue-router'
   </nav>
 
   <RouterView />
+
+  <!-- If you were to use the activated hook in the components, we would need to keep alive the components
+as it is below -->
+  <!-- <router-view v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component" />
+    </keep-alive>
+  </router-view> -->
 </template>
 
 <style>

@@ -13,7 +13,7 @@
 
     <div class="edit">
       <h4>Edit counter title:</h4>
-      <input v-model="counterTitle" text="input" />
+      <input v-model="counterTitle" v-autofocus text="input" />
     </div>
 
     <h3 class="second-counter-title">{{ otherCounterData.title }}</h3>
@@ -64,7 +64,21 @@ export default {
 
 <script setup>
 import { computed } from '@vue/reactivity'
-import { reactive, ref, watch } from 'vue'
+import {
+  onActivated,
+  onBeforeMount,
+  onBeforeUnmount,
+  onBeforeUpdate,
+  onDeactivated,
+  onMounted,
+  onUnmounted,
+  onUpdated,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
+
+import { vAutofocus } from '@/directives/vAutofocus'
 
 // Use non-reactive Data for best performance if you don't need it to change.
 const appTitle = 'My Amazing Counter App'
@@ -72,6 +86,15 @@ const appTitle = 'My Amazing Counter App'
 const counterTitle = ref('Setup counter'),
   counter = ref(0)
 
+// Directives - now imported from directives
+// v-autofocus on the template
+// const vAutofocus = {
+//   mounted: (el) => {
+//     el.focus()
+//   },
+// }
+
+// Reactive
 const otherCounterData = reactive({
   title: 'The second Counter',
   count: 0,
@@ -79,6 +102,8 @@ const otherCounterData = reactive({
 
 const increaseCounter = () => counter.value++
 const decreaseCounter = () => counter.value--
+// You can use the same hook to keep the code easier to read
+onMounted(() => increaseCounter())
 
 const counterOddEven = computed(() => (counter.value % 2 === 0 ? 'even' : 'odd'))
 
@@ -95,6 +120,21 @@ watch(
   () => otherCounterData.count,
   (newCount, oldCount) => (showWarning.value = newCount > oldCount + 9)
 )
+
+// Lifecycle hooks
+onBeforeMount(() => console.log('Before Mount'))
+onMounted(() => console.log('Mounted'))
+onBeforeUnmount(() => console.log('Before Unmount'))
+onUnmounted(() => console.log('Unmounted'))
+
+// Only fired if the components are kept alive.
+// If the are not showing but still in the background
+onActivated(() => console.log('Activated'))
+onDeactivated(() => console.log('Deactivated'))
+
+// The update (can be performance expensive)
+onBeforeUpdate(() => console.log('Before Update'))
+onUpdated(() => console.log('Updated'))
 </script>
 
 <style>
