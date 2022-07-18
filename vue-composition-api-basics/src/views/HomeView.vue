@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>{{ appTitle }}</h1>
+    <h1 ref="appTitleRef">{{ appTitle }}</h1>
 
     <h3>{{ counterTitle }}</h3>
     <div>
@@ -65,6 +65,7 @@ export default {
 <script setup>
 import { computed } from '@vue/reactivity'
 import {
+  nextTick,
   onActivated,
   onBeforeMount,
   onBeforeUnmount,
@@ -82,6 +83,11 @@ import { vAutofocus } from '@/directives/vAutofocus'
 
 // Use non-reactive Data for best performance if you don't need it to change.
 const appTitle = 'My Amazing Counter App'
+const appTitleRef = ref(null)
+
+onMounted(() => {
+  console.log(`The app title width is: ${appTitleRef.value.offsetWidth}px`)
+})
 
 const counterTitle = ref('Setup counter'),
   counter = ref(0)
@@ -107,11 +113,15 @@ onMounted(() => increaseCounter())
 
 const counterOddEven = computed(() => (counter.value % 2 === 0 ? 'even' : 'odd'))
 
-const increaseCounterTwo = (amount) => (otherCounterData.count += amount)
+const increaseCounterTwo = async (amount) => {
+  otherCounterData.count += amount
+  await nextTick()
+}
 // Passing also the $event
 const decreaseCounterTwo = (amount, evt) => {
   console.log(evt)
   otherCounterData.count -= amount
+  nextTick(() => console.log('Next tick: Fired once the DOM has updated!'))
 }
 
 const watcherWarning = 'The second counter was increased by 10!'
