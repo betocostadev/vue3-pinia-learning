@@ -1,8 +1,5 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
+  <div class="user-data">{{ userData.name }} @{{ userData.username }}</div>
   <nav>
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/modals">Modals</RouterLink>
@@ -19,6 +16,18 @@ as it is below -->
     </keep-alive>
   </router-view> -->
 </template>
+
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+import { provide, reactive } from 'vue'
+
+const userData = reactive({
+  name: 'Beto',
+  username: 'betocostadev',
+})
+
+provide('userData', userData)
+</script>
 
 <style>
 @import '@/assets/base.css';

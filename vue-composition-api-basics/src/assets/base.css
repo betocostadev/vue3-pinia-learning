@@ -76,3 +76,15 @@ body {
 .modals-container {
   position: initial;
 }
+
+.user-data {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.2rem;
+  padding: 0.4rem;
+  box-shadow: 1px 1px 2px 0 #03bd7e;
+  border-radius: 10%;
+  color: var(--color-text);
+  background: var(--color-background);
+}
