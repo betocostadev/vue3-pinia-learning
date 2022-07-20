@@ -26,6 +26,9 @@
             We use the v-model="model" and in the child we use the update:modelValue to emit the
             update.
           </p>
+          <p class="attention-text">
+            <strong>Oh, and by the way... the count in the store is now: {{ count.count }}</strong>
+          </p>
         </AltModal>
       </div>
     </article>
@@ -36,13 +39,20 @@
 import { ref } from 'vue'
 import Modal from '@/components/Modal.vue'
 import AltModal from '../components/AltModal.vue'
+import { useCounterStore } from '../stores/counter'
 
 const showModal = ref(false)
 const showAltModal = ref(false)
+const count = useCounterStore()
 </script>
 
 <style>
 .article {
   display: flex;
+}
+.attention-text {
+  margin-top: 0.25rem;
+  font-weight: bold;
+  color: black;
 }
 </style>

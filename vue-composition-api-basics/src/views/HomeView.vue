@@ -16,7 +16,7 @@
       <input v-model="counterTitle" v-autofocus text="input" />
     </div>
 
-    <h3 class="second-counter-title">{{ otherCounterData.title }}</h3>
+    <h3 class="counter-title">{{ otherCounterData.title }}</h3>
     <div>
       <button class="btn" @click="decreaseCounterTwo(10, $event)">- 10</button>
       <button class="btn" @click="decreaseCounterTwo(1, $event)">- 1</button>
@@ -24,8 +24,17 @@
       <button class="btn" @click="increaseCounterTwo(1)">+ 1</button>
       <button class="btn" @click="increaseCounterTwo(10)">+ 10</button>
     </div>
-
     <h5 v-if="showWarning" class="watcher-warning">{{ watcherWarning }}</h5>
+
+    <h3 class="counter-title">{{ count.title }}</h3>
+    <div>
+      <button class="btn" @click="count.decrementCountByAmount(5)">--</button>
+      <button class="btn" @click="count.decrementCount">-</button>
+      <span class="counter">{{ count.count }}</span>
+      <button class="btn" @click="count.incrementCount">+</button>
+      <button class="btn" @click="count.incrementCountByAmount(5)">++</button>
+      <h4>The number above is {{ count.oddOrEven }}</h4>
+    </div>
   </div>
 </template>
 
@@ -82,6 +91,8 @@ import { useCounter } from '@/use/useCounter.js'
 
 import { vAutofocus } from '@/directives/vAutofocus'
 
+import { useCounterStore } from '../stores/counter'
+
 // Use non-reactive Data for best performance if you don't need it to change.
 const appTitle = 'My Amazing Counter App'
 const appTitleRef = ref(null)
@@ -136,6 +147,9 @@ watch(
   (newCount, oldCount) => (showWarning.value = newCount > oldCount + 9)
 )
 
+// Pinia Stored Counter
+const count = useCounterStore()
+
 // Lifecycle hooks
 onBeforeMount(() => console.log('Before Mount'))
 onMounted(() => console.log('Mounted'))
@@ -162,7 +176,7 @@ onUpdated(() => console.log('Updated'))
   margin-top: 50px;
 }
 
-.second-counter-title {
+.counter-title {
   margin-top: 30px;
 }
 
