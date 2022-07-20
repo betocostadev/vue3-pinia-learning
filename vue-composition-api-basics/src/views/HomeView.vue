@@ -63,7 +63,6 @@ export default {
 </script> -->
 
 <script setup>
-import { computed } from '@vue/reactivity'
 import {
   nextTick,
   onActivated,
@@ -79,6 +78,8 @@ import {
   watch,
 } from 'vue'
 
+import { useCounter } from '@/use/useCounter.js'
+
 import { vAutofocus } from '@/directives/vAutofocus'
 
 // Use non-reactive Data for best performance if you don't need it to change.
@@ -89,8 +90,8 @@ onMounted(() => {
   console.log(`The app title width is: ${appTitleRef.value.offsetWidth}px`)
 })
 
-const counterTitle = ref('Setup counter'),
-  counter = ref(0)
+// const counterTitle = ref('Setup counter'),
+//   counter = ref(0)
 
 // Directives - now imported from directives
 // v-autofocus on the template
@@ -106,12 +107,16 @@ const otherCounterData = reactive({
   count: 0,
 })
 
-const increaseCounter = () => counter.value++
-const decreaseCounter = () => counter.value--
-// You can use the same hook to keep the code easier to read
-onMounted(() => increaseCounter())
+// const increaseCounter = () => counter.value++
+// const decreaseCounter = () => counter.value--
+// // You can use the same hook to keep the code easier to read
+// onMounted(() => increaseCounter())
 
-const counterOddEven = computed(() => (counter.value % 2 === 0 ? 'even' : 'odd'))
+// const counterOddEven = computed(() => (counter.value % 2 === 0 ? 'even' : 'odd'))
+
+// THE COUNTER IS NOW IN A COMPOSABLE - VUE
+
+const { counter, counterTitle, increaseCounter, decreaseCounter, counterOddEven } = useCounter()
 
 const increaseCounterTwo = async (amount) => {
   otherCounterData.count += amount
