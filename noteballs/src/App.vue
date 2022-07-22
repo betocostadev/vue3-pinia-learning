@@ -2,10 +2,9 @@
   <header>
     <NavBar />
   </header>
-  <!-- <RouterLink to="/" class="button">Notes</RouterLink>
-  <RouterLink to="stats" class="button">Stats</RouterLink> -->
-  <RouterView />
-  <!-- <main></main> -->
+  <main class="container is-max-desktop px-2 py-4">
+    <RouterView />
+  </main>
 </template>
 
 <script setup>
