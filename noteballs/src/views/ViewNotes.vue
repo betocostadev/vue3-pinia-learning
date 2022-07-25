@@ -4,34 +4,71 @@
       <div class="field">
         <label class="label" :style="{ color: 'white' }">Add a New Note</label>
         <div class="control">
-          <textarea class="textarea" placeholder="Start adding your note here..." />
+          <textarea
+            v-model="newNote"
+            class="textarea"
+            placeholder="Start adding your note here..."
+            ref="newNoteRef"
+          />
         </div>
       </div>
 
       <div class="field is-grouped is-grouped-right">
         <div class="control">
-          <button class="button is-link has-background-danger">Cancel</button>
+          <button
+            @click="newNote = ''"
+            :disabled="!newNote"
+            class="button is-link has-background-danger"
+          >
+            Cancel
+          </button>
         </div>
         <div class="control">
-          <button class="button is-link has-background-success">Add note</button>
+          <button
+            @click="addNote"
+            :disabled="!newNote"
+            class="button is-link has-background-success"
+          >
+            Add note
+          </button>
         </div>
       </div>
     </div>
 
-    <div v-for="i in 3" class="card mb-4">
-      <div class="card-content">
-        <div class="content">
-          <p>Lorem ipsum</p>
-        </div>
-      </div>
-      <footer class="card-footer">
-        <a href="#" class="card-footer-item">Edit</a>
-        <a href="#" class="card-footer-item">Delete</a>
-      </footer>
-    </div>
+    <Note v-for="note in notes" :key="note.id" :note="note" />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+import Note from '@/components/Notes/Note.vue'
+
+const newNote = ref('')
+const newNoteRef = ref(null)
+
+const notes = ref([
+  {
+    id: 'id1',
+    content: 'This is the first fake note of the App. Just a short note for displaying',
+  },
+  {
+    id: 'id2',
+    content:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae obcaecati quaerat mollitia eos repellat consequatur doloremque ad! Dolorem, reiciendis asperiores, tenetur corporis cum ipsa eveniet non reprehenderit accusantium ipsum dignissimos.',
+  },
+])
+
+const addNote = () => {
+  const currentDate = new Date().getTime()
+  const note = {
+    id: currentDate.toString(),
+    content: newNote.value,
+  }
+
+  notes.value.unshift(note)
+  newNote.value = ''
+  newNoteRef.value.focus()
+}
+</script>
 
 <style></style>
