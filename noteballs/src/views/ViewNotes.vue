@@ -42,21 +42,12 @@
 <script setup>
 import { ref } from 'vue'
 import Note from '@/components/Notes/Note.vue'
+import { useNotesStore } from '@/stores/notes'
 
 const newNote = ref('')
 const newNoteRef = ref(null)
 
-const notes = ref([
-  {
-    id: 'id1',
-    content: 'This is the first fake note of the App. Just a short note for displaying',
-  },
-  {
-    id: 'id2',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae obcaecati quaerat mollitia eos repellat consequatur doloremque ad! Dolorem, reiciendis asperiores, tenetur corporis cum ipsa eveniet non reprehenderit accusantium ipsum dignissimos.',
-  },
-])
+const { notes } = useNotesStore()
 
 const addNote = () => {
   const currentDate = new Date().getTime()
