@@ -10,7 +10,7 @@
     </div>
     <footer class="card-footer">
       <a href="#" class="card-footer-item">Edit</a>
-      <a href="#" class="card-footer-item">Delete</a>
+      <a @click="handleDeleteNote" href="#" class="card-footer-item">Delete</a>
     </footer>
   </div>
 </template>
@@ -25,6 +25,12 @@ const props = defineProps({
   },
 })
 
+const emits = defineEmits({
+  deleteNote: {
+    type: Function,
+  },
+})
+
 const charLength = computed(() => {
   return !props.note.content
     ? 0
@@ -32,6 +38,10 @@ const charLength = computed(() => {
     ? `${props.note.content.length} characters`
     : `${props.note.content.length} character`
 })
+
+const handleDeleteNote = () => {
+  emits('deleteNote', props.note.id)
+}
 </script>
 
 <style></style>
