@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <Note v-for="note in notes" :key="note.id" :note="note" @deleteNote="deleteNote" />
+    <Note v-for="note in notesStore.notes" :key="note.id" :note="note" @deleteNote="deleteNote" />
   </div>
 </template>
 
@@ -47,16 +47,10 @@ import { useNotesStore } from '@/stores/notes'
 const newNote = ref('')
 const newNoteRef = ref(null)
 
-const { notes } = useNotesStore()
+const notesStore = useNotesStore()
 
 const addNote = () => {
-  const currentDate = new Date().getTime()
-  const note = {
-    id: currentDate.toString(),
-    content: newNote.value,
-  }
-
-  notes.value.unshift(note)
+  notesStore.addNote(newNote.value)
   newNote.value = ''
   newNoteRef.value.focus()
 }
