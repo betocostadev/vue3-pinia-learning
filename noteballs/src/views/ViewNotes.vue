@@ -1,48 +1,32 @@
 <template>
   <div class="notes">
-    <div class="card has-background-success-dark p-4 mb-5">
-      <div class="field">
-        <label class="label" :style="{ color: 'white' }">Add a New Note</label>
-        <div class="control">
-          <textarea
-            v-model="newNote"
-            class="textarea"
-            placeholder="Start adding your note here..."
-            ref="newNoteRef"
-          />
-        </div>
-      </div>
+    <AddEditNote v-model="newNote" :typeOfAction="'add'">
+      <template #cancel-btn>
+        <button
+          @click="newNote = ''"
+          :disabled="!newNote"
+          class="button is-link has-background-danger"
+        >
+          Cancel
+        </button>
+      </template>
 
-      <div class="field is-grouped is-grouped-right">
-        <div class="control">
-          <button
-            @click="newNote = ''"
-            :disabled="!newNote"
-            class="button is-link has-background-danger"
-          >
-            Cancel
-          </button>
-        </div>
-        <div class="control">
-          <button
-            @click="addNote"
-            :disabled="!newNote"
-            class="button is-link has-background-success"
-          >
-            Add note
-          </button>
-        </div>
-      </div>
-    </div>
+      <template #success-btn>
+        <button @click="addNote" :disabled="!newNote" class="button is-link has-background-success">
+          Add note
+        </button>
+      </template>
+    </AddEditNote>
 
-    <Note v-for="note in notesStore.notes" :key="note.id" :note="note" @deleteNote="deleteNote" />
+    <Note v-for="note in notesStore.notes" :key="note.id" :note="note" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import Note from '@/components/Notes/Note.vue'
 import { useNotesStore } from '@/stores/notes'
+import Note from '@/components/Notes/Note.vue'
+import AddEditNote from '../components/Notes/AddEditNote.vue'
 
 const newNote = ref('')
 const newNoteRef = ref(null)
@@ -53,12 +37,6 @@ const addNote = () => {
   notesStore.addNote(newNote.value)
   newNote.value = ''
   newNoteRef.value.focus()
-}
-
-const deleteNote = (id) => {
-  if (id) {
-    notes.value = notes.value.filter((n) => n.id !== id)
-  }
 }
 </script>
 

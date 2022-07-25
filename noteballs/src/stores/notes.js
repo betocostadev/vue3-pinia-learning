@@ -5,17 +5,17 @@ export const useNotesStore = defineStore('notes', {
     return {
       notes: [
         {
-          id: '1668272',
+          id: '1658784325615',
           content:
             'This is the first fake note of the App. Just a short note for displaying in the DOM.',
         },
         {
-          id: '16678421',
+          id: '1658784321611',
           content:
             'Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae obcaecati quaerat mollitia eos repellat consequatur doloremque ad! Dolorem, reiciendis asperiores, tenetur corporis cum ipsa eveniet non reprehenderit accusantium ipsum dignissimos.',
         },
         {
-          id: '16678533',
+          id: '1658784318610',
           content: 'This is another fake note. Added while doing the Course',
         },
       ],
@@ -31,6 +31,10 @@ export const useNotesStore = defineStore('notes', {
       }
 
       this.notes.unshift(note)
+    },
+
+    deleteNote(id) {
+      this.notes = this.notes.filter((n) => n.id !== id)
     },
   },
 })

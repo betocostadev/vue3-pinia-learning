@@ -9,6 +9,11 @@ const routes = [
     component: ViewNotes,
   },
   {
+    path: '/edit-note/:id',
+    name: 'editNot',
+    component: () => import('../views/ViewEditNote.vue'),
+  },
+  {
     path: '/stats',
     name: 'stats',
     component: ViewStats,
