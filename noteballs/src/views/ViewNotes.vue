@@ -1,6 +1,6 @@
 <template>
   <div class="notes">
-    <AddEditNote v-model="newNote" :typeOfAction="'add'">
+    <AddEditNote v-model="newNote" ref="addEditNoteRef" :typeOfAction="'add'">
       <template #cancel-btn>
         <button
           @click="newNote = ''"
@@ -28,15 +28,16 @@ import { useNotesStore } from '@/stores/notes'
 import Note from '@/components/Notes/Note.vue'
 import AddEditNote from '../components/Notes/AddEditNote.vue'
 
-const newNote = ref('')
-const newNoteRef = ref(null)
-
 const notesStore = useNotesStore()
+
+const newNote = ref('')
+const addEditNoteRef = ref(null)
 
 const addNote = () => {
   notesStore.addNote(newNote.value)
   newNote.value = ''
-  newNoteRef.value.focus()
+
+  addEditNoteRef.value.focusText()
 }
 </script>
 
