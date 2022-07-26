@@ -36,11 +36,24 @@ export const useNotesStore = defineStore('notes', {
     deleteNote(id) {
       this.notes = this.notes.filter((note) => note.id !== id)
     },
+
+    editNote({ id, content }) {
+      const noteToEdit = {
+        id,
+        content,
+      }
+      this.notes = this.notes.map((note) => (note.id === noteToEdit.id ? noteToEdit : note))
+    },
+    // Danny's version - Not considering immutability
+    // editNote({ id, content }) {
+    //   const index = this.notes.findIndex(note => note.id === id)
+    //   this.notes[index].content = content
+    // },
   },
 
   getters: {
-    getNoteContent: (state) => (id) => {
-      return state.notes.find((note) => note.id === id).content
+    getNote: (state) => (id) => {
+      return state.notes.find((note) => note.id === id)
     },
     // Danny's version
     // getNoteContent: (state) => {
@@ -48,5 +61,10 @@ export const useNotesStore = defineStore('notes', {
     //     state.notes.filter((note) => note.id === id)[0].content
     //   }
     // },
+    getNoteCount: (state) => state.notes.length,
+    getNotesCharactersCount: (state) =>
+      state.notes.reduce((acc, note) => {
+        return acc + note.content.length
+      }, 0),
   },
 })

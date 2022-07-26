@@ -12,7 +12,7 @@
 
       <template #success-btn>
         <button
-          @click="editNote"
+          @click="handleEditNote"
           :disabled="!noteContent"
           class="button is-link has-background-link"
         >
@@ -26,16 +26,22 @@
 <script setup>
 import AddEditNote from '@/components/Notes/AddEditNote.vue'
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useNotesStore } from '../stores/notes'
 
 const noteContent = ref('')
 
 const route = useRoute()
+const router = useRouter()
 const notesStore = useNotesStore()
 
+const handleEditNote = () => {
+  notesStore.editNote({ id: route.params.id, content: noteContent.value })
+  router.push('/')
+}
+
 onMounted(() => {
-  noteContent.value = notesStore.getNoteContent(route.params.id)
+  noteContent.value = notesStore.getNote(route.params.id).content
 })
 </script>
 
