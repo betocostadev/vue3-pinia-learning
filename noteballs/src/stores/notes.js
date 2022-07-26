@@ -34,7 +34,19 @@ export const useNotesStore = defineStore('notes', {
     },
 
     deleteNote(id) {
-      this.notes = this.notes.filter((n) => n.id !== id)
+      this.notes = this.notes.filter((note) => note.id !== id)
     },
+  },
+
+  getters: {
+    getNoteContent: (state) => (id) => {
+      return state.notes.find((note) => note.id === id).content
+    },
+    // Danny's version
+    // getNoteContent: (state) => {
+    //   return (id) => {
+    //     state.notes.filter((note) => note.id === id)[0].content
+    //   }
+    // },
   },
 })

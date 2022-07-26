@@ -1,20 +1,22 @@
 <template>
   <div class="edit-note">
-    <h1>Edit Note</h1>
-    <AddEditNote :typeOfAction="'edit'" v-model="newNote">
+    <AddEditNote
+      v-model="noteContent"
+      :typeOfAction="'edit'"
+      bgColor="link"
+      placeholder="Edit Note"
+    >
       <template v-slot:cancel-btn>
-        <button
-          @click="newNote = ''"
-          :disabled="!newNote"
-          class="button is-link has-background-danger"
-        >
-          Cancel
-        </button>
+        <button @click="$router.push('/')" class="button is-link is-light">Cancel</button>
       </template>
 
       <template #success-btn>
-        <button @click="addNote" :disabled="!newNote" class="button is-link has-background-success">
-          Add note
+        <button
+          @click="editNote"
+          :disabled="!noteContent"
+          class="button is-link has-background-link"
+        >
+          Save Note
         </button>
       </template>
     </AddEditNote>
@@ -23,6 +25,18 @@
 
 <script setup>
 import AddEditNote from '@/components/Notes/AddEditNote.vue'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useNotesStore } from '../stores/notes'
+
+const noteContent = ref('')
+
+const route = useRoute()
+const notesStore = useNotesStore()
+
+onMounted(() => {
+  noteContent.value = notesStore.getNoteContent(route.params.id)
+})
 </script>
 
 <style scoped></style>
