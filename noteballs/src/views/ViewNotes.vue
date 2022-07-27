@@ -44,7 +44,7 @@ const addNote = () => {
 
 // Vue use - Watch characters
 
-useWatchCharacters(newNote)
+useWatchCharacters(newNote, 120)
 </script>
 
 <style></style>
