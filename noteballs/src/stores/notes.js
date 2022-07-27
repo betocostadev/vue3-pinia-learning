@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia'
 
+import { db } from '../utils/functions/firebase'
+
+console.log(db)
+
 export const useNotesStore = defineStore('notes', {
   state: () => {
     return {
