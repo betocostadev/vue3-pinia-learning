@@ -12,7 +12,7 @@
       <RouterLink :to="`/edit-note/${note.id}`" href="#" class="card-footer-item">Edit</RouterLink>
       <a @click.prevent="promptToDeleteNote" href="#" class="card-footer-item">Delete</a>
     </footer>
-    <ModalDeleteNote v-if="modals.deleteNote" v-model="modals.deleteNote" />
+    <ModalDeleteNote v-if="modals.deleteNote" v-model="modals.deleteNote" :noteId="note.id" />
   </div>
 </template>
 
@@ -40,10 +40,6 @@ const charLength = computed(() => {
 
 const promptToDeleteNote = () => {
   modals.deleteNote = true
-}
-
-const deleteNote = () => {
-  notesStore.deleteNote(props.note.id)
 }
 
 // MODALS

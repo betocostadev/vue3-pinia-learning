@@ -11,7 +11,7 @@
       </section>
       <footer class="modal-card-foot is-justify-content-flex-end">
         <button @click="closeModal" class="button">Cancel</button>
-        <button @click="" class="button is-danger">Delete Note</button>
+        <button @click="deleteNote" class="button is-danger">Delete Note</button>
       </footer>
     </div>
   </div>
@@ -20,6 +20,9 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { useNotesStore } from '@/stores/notes'
+
+const notesStore = useNotesStore()
 
 // Props
 const props = defineProps({
@@ -27,7 +30,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  noteId: {
+    type: String,
+    required: true,
+  },
 })
+
+const deleteNote = () => notesStore.deleteNote(props.noteId)
 
 // Emits
 const emits = defineEmits(['update:modelValue'])
