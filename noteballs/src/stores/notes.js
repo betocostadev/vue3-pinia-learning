@@ -62,9 +62,8 @@ export const useNotesStore = defineStore('notes', {
     //   }
     // },
     getNoteCount: (state) => state.notes.length,
+
     getNotesCharactersCount: (state) =>
-      state.notes.reduce((acc, note) => {
-        return acc + note.content.length
-      }, 0),
+      state.notes.reduce((acc, note) => acc + note.content.length, 0),
   },
 })
