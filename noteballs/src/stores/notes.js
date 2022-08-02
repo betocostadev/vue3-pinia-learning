@@ -1,71 +1,80 @@
 import { defineStore } from 'pinia'
-import { collection, getDocs } from 'firebase/firestore'
+// Comented FB code is for Read Data Once only
+// import { collection, getDocs } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  setDoc,
+  deleteDoc,
+  updateDoc,
+  query,
+  where,
+  onSnapshot,
+} from 'firebase/firestore'
 import { db } from '../utils/functions/firebase'
 
-console.log(db)
+const notesCollectionRef = collection(db, 'notes')
 
 export const useNotesStore = defineStore('notes', {
   state: () => {
     return {
-      notes: [
-        // {
-        //   id: '1658784325615',
-        //   content:
-        //     'This is the first fake note of the App. Just a short note for displaying in the DOM.',
-        // },
-        // {
-        //   id: '1658784321611',
-        //   content:
-        //     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae obcaecati quaerat mollitia eos repellat consequatur doloremque ad! Dolorem, reiciendis asperiores, tenetur corporis cum ipsa eveniet non reprehenderit accusantium ipsum dignissimos.',
-        // },
-        // {
-        //   id: '1658784318610',
-        //   content: 'This is another fake note. Added while doing the Course',
-        // },
-      ],
+      notes: [],
     }
   },
 
   actions: {
     async getNotes() {
-      const querySnapshot = await getDocs(collection(db, 'notes'))
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, ' => ', doc.data())
-        const note = {
-          id: doc.id,
-          content: doc.data().content,
-        }
-        this.notes.push(note)
+      // This commented code is related to Read Data Once in Firestore, no realtime updates
+      // const querySnapshot = await getDocs(collection(db, 'notes'))
+      // querySnapshot.forEach((doc) => {
+      //   // doc.data() is never undefined for query doc snapshots
+      //   // console.log(doc.id, ' => ', doc.data())
+      //   const note = {
+      //     id: doc.id,
+      //     content: doc.data().content,
+      //   }
+      //   this.notes.push(note)
+      // })
+
+      const unsubscribe = onSnapshot(notesCollectionRef, (querySnapshot) => {
+        const notes = []
+        querySnapshot.forEach((doc) => {
+          const note = {
+            id: doc.id,
+            content: doc.data().content,
+          }
+          notes.push(note)
+        })
+
+        this.notes = notes
+      })
+
+      // onSnapshot will keep listening for changes while the app is running
+      // If there was a need to stop this, it could just use the method below
+      // unsubscribe()
+    },
+
+    async addNote(content) {
+      const currentDate = new Date().getTime(),
+        id = currentDate.toString()
+
+      await setDoc(doc(notesCollectionRef, id), {
+        content: content,
       })
     },
 
-    addNote(content) {
-      const currentDate = new Date().getTime()
-      const note = {
-        id: currentDate.toString(),
+    async deleteNote(id) {
+      await deleteDoc(doc(notesCollectionRef, id))
+    },
+
+    async editNote({ id, content }) {
+      const noteRef = doc(notesCollectionRef, id)
+
+      // Set the "content" field of the note 'id'
+      await updateDoc(noteRef, {
         content,
-      }
-
-      this.notes.unshift(note)
+      })
     },
-
-    deleteNote(id) {
-      this.notes = this.notes.filter((note) => note.id !== id)
-    },
-
-    editNote({ id, content }) {
-      const noteToEdit = {
-        id,
-        content,
-      }
-      this.notes = this.notes.map((note) => (note.id === noteToEdit.id ? noteToEdit : note))
-    },
-    // Danny's version - Not considering immutability
-    // editNote({ id, content }) {
-    //   const index = this.notes.findIndex(note => note.id === id)
-    //   this.notes[index].content = content
-    // },
   },
 
   getters: {
