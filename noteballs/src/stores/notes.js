@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useNow, useDateFormat } from '@vueuse/core'
+import { useDateFormat } from '@vueuse/core'
 
 import {
   collection,

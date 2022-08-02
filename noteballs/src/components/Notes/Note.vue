@@ -5,9 +5,7 @@
         <p>{{ note.content }}</p>
         <div class="columns is-mobile has-text-grey-light mt-2">
           <small class="column">{{ charLength }}</small>
-          <small class="column has-text-right">{{
-            `last update: ${notesStore.getNoteDate(note.id).value}`
-          }}</small>
+          <small class="column has-text-right">{{ lastUpdated }}</small>
         </div>
       </div>
     </div>
@@ -40,6 +38,8 @@ const charLength = computed(() => {
     ? `${props.note.content.length} characters`
     : `${props.note.content.length} character`
 })
+
+const lastUpdated = computed(() => `last update: ${notesStore.getNoteDate(props.note.id).value}`)
 
 const promptToDeleteNote = () => {
   modals.deleteNote = true
