@@ -3,8 +3,11 @@
     <div class="card-content">
       <div class="content">
         <p>{{ note.content }}</p>
-        <div class="has-text-right has-text-grey-light mt-2">
-          <small>{{ charLength }}</small>
+        <div class="columns is-mobile has-text-grey-light mt-2">
+          <small class="column">{{ charLength }}</small>
+          <small class="column has-text-right">{{
+            `last update: ${notesStore.getNoteDate(note.id).value}`
+          }}</small>
         </div>
       </div>
     </div>

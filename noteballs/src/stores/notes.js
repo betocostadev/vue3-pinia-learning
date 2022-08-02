@@ -1,19 +1,24 @@
 import { defineStore } from 'pinia'
-// Comented FB code is for Read Data Once only
-// import { collection, getDocs } from 'firebase/firestore'
+import { useNow, useDateFormat } from '@vueuse/core'
+
 import {
   collection,
   doc,
+  addDoc,
   setDoc,
   deleteDoc,
   updateDoc,
   query,
+  orderBy,
+  limit,
   where,
   onSnapshot,
 } from 'firebase/firestore'
 import { db } from '../utils/functions/firebase'
 
 const notesCollectionRef = collection(db, 'notes')
+const notesCollectionQuery = query(notesCollectionRef, orderBy('ts', 'desc'))
+// const notesCollectionQuery = query(notesCollectionRef, orderBy('id', 'desc'), limit(2))
 
 export const useNotesStore = defineStore('notes', {
   state: () => {
@@ -36,12 +41,13 @@ export const useNotesStore = defineStore('notes', {
       //   this.notes.push(note)
       // })
 
-      const unsubscribe = onSnapshot(notesCollectionRef, (querySnapshot) => {
+      const unsubscribe = onSnapshot(notesCollectionQuery, (querySnapshot) => {
         const notes = []
         querySnapshot.forEach((doc) => {
           const note = {
             id: doc.id,
             content: doc.data().content,
+            ts: doc.data().ts,
           }
           notes.push(note)
         })
@@ -56,11 +62,18 @@ export const useNotesStore = defineStore('notes', {
 
     async addNote(content) {
       const currentDate = new Date().getTime(),
-        id = currentDate.toString()
+        ts = currentDate.toString()
 
-      await setDoc(doc(notesCollectionRef, id), {
-        content: content,
+      await addDoc(notesCollectionRef, {
+        content,
+        ts,
       })
+
+      // used when adding my own ID
+      // await setDoc(doc(notesCollectionRef, id), {
+      //   content: content,
+      //   ts,
+      // })
     },
 
     async deleteNote(id) {
@@ -69,10 +82,14 @@ export const useNotesStore = defineStore('notes', {
 
     async editNote({ id, content }) {
       const noteRef = doc(notesCollectionRef, id)
+      const currentDate = new Date().getTime(),
+        ts = currentDate.toString()
+      // Added ts to be updated when the note is updated
 
       // Set the "content" field of the note 'id'
       await updateDoc(noteRef, {
         content,
+        ts,
       })
     },
   },
@@ -81,15 +98,15 @@ export const useNotesStore = defineStore('notes', {
     getNote: (state) => (id) => {
       return state.notes.find((note) => note.id === id)
     },
-    // Danny's version
-    // getNoteContent: (state) => {
-    //   return (id) => {
-    //     state.notes.filter((note) => note.id === id)[0].content
-    //   }
-    // },
     getNoteCount: (state) => state.notes.length,
 
     getNotesCharactersCount: (state) =>
       state.notes.reduce((acc, note) => acc + note.content.length, 0),
+
+    getNoteDate: (state) => (id) => {
+      const note = state.notes.find((note) => note.id === id)
+      const date = new Date(parseInt(note.ts))
+      return useDateFormat(date, 'DD/MM/YYYY - HH:mm')
+    },
   },
 })
