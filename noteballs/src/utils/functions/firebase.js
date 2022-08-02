@@ -5,9 +5,6 @@ import { initializeApp } from 'firebase/app'
 
 import { getFirestore } from 'firebase/firestore'
 
-console.log(import.meta.env.VITE_FIRE_API_KEY)
-console.log(import.meta.env.VITE_GRELOS)
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIRE_API_KEY,

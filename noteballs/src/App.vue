@@ -8,7 +8,13 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import NavBar from './components/layout/NavBar.vue'
+import { useNotesStore } from './stores/notes'
+
+const notesStore = useNotesStore()
+
+onMounted(() => notesStore.getNotes())
 </script>
 
 <style>
