@@ -24,11 +24,13 @@ export const useNotesStore = defineStore('notes', {
   state: () => {
     return {
       notes: [],
+      notesLoaded: false,
     }
   },
 
   actions: {
     async getNotes() {
+      this.notesLoaded = false
       // This commented code is related to Read Data Once in Firestore, no realtime updates
       // const querySnapshot = await getDocs(collection(db, 'notes'))
       // querySnapshot.forEach((doc) => {
@@ -53,6 +55,7 @@ export const useNotesStore = defineStore('notes', {
         })
 
         this.notes = notes
+        this.notesLoaded = true
       })
 
       // onSnapshot will keep listening for changes while the app is running
