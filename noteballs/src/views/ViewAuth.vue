@@ -114,14 +114,20 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { useAuthStore } from '../stores/auth'
 
 const register = ref(false)
 
 const formTitle = computed(() => (register.value ? 'Register' : 'Login'))
 
-const onSubmit = () => {
+const authStore = useAuthStore()
+
+const onSubmit = (e) => {
+  e.preventDefault()
   if (register.value) {
-    console.log('Register')
+    if (!registerBtnDisabled.value) {
+      authStore.registerUser(credentials)
+    }
   } else {
     console.log('Login')
   }
@@ -136,8 +142,8 @@ const credentials = reactive({
 const registerBtnDisabled = computed(() => {
   if (register.value) {
     return (
-      credentials.email.length < 5 ||
-      credentials.password.length < 5 ||
+      credentials.email.length < 6 ||
+      credentials.password.length < 6 ||
       credentials.password !== credentials.confirmPassword
     )
   }

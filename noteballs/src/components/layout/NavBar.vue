@@ -30,7 +30,7 @@
         ref="mobileNavRef"
       >
         <div class="navbar-start">
-          <button class="button is-small is-info mt-3 ml-3">Log out</button>
+          <button class="button is-small is-info mt-3 ml-3" @click="logoutUser">Log out</button>
         </div>
 
         <div class="navbar-end">
@@ -69,7 +69,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { onClickOutside } from '@vueuse/core'
+import { useAuthStore } from '../../stores/auth'
 
 // mobile nav
 const showMobileNav = ref(false)
@@ -77,8 +79,16 @@ const showMobileNav = ref(false)
 const mobileNavRef = ref(null)
 const navbarBurgerRef = ref(null)
 
-// VUE USE - ClickOutside to close
+const authStore = useAuthStore()
 
+const logoutUser = () => {
+  authStore.logoutUser()
+  router.push({ name: 'auth' })
+}
+
+const router = useRouter()
+
+// VUE USE - ClickOutside to close
 onClickOutside(
   mobileNavRef,
   () => {
