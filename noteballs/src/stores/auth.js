@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 // import { useDateFormat } from '@vueuse/core'
 
 import { collection, query } from 'firebase/firestore'
@@ -19,6 +19,22 @@ export const useAuthStore = defineStore('authStore', {
           credentials.password
         )
         console.log(newUser)
+      } catch (error) {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.log(errorCode, errorMessage)
+      }
+    },
+    async loginUser(credentials) {
+      console.log('logging in')
+      try {
+        const userCredentials = await signInWithEmailAndPassword(
+          auth,
+          credentials.email,
+          credentials.password
+        )
+
+        return userCredentials.user ? userCredentials.user : undefined
       } catch (error) {
         const errorCode = error.code
         const errorMessage = error.message
