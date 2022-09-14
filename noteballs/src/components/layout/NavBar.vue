@@ -30,7 +30,9 @@
         ref="mobileNavRef"
       >
         <div class="navbar-start">
-          <button class="button is-small is-info mt-3 ml-3" @click="logoutUser">Log out</button>
+          <button class="button is-small is-info mt-3 ml-3" v-if="userId" @click="logoutUser">
+            Logout {{ userEmail }}
+          </button>
         </div>
 
         <div class="navbar-end">
@@ -68,7 +70,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { onClickOutside } from '@vueuse/core'
 import { useAuthStore } from '../../stores/auth'
@@ -81,8 +83,12 @@ const navbarBurgerRef = ref(null)
 
 const authStore = useAuthStore()
 
+const userId = computed(() => authStore.user.id)
+const userEmail = computed(() => authStore.user.email)
+
 const logoutUser = () => {
   authStore.logoutUser()
+  showMobileNav.value = false
   router.push({ name: 'auth' })
 }
 
