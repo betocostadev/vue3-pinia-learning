@@ -20,8 +20,10 @@ export const useAuthStore = defineStore('authStore', {
         if (user) {
           this.user.id = user.uid
           this.user.email = user.email
+          this.router.push({ name: 'notes' })
         } else {
           this.user = {}
+          this.router.replace({ name: 'auth' })
         }
       })
     },
@@ -32,7 +34,7 @@ export const useAuthStore = defineStore('authStore', {
           credentials.email,
           credentials.password
         )
-        console.log(newUser)
+        if (newUser) this.router.push({ name: 'notes' })
       } catch (error) {
         const errorCode = error.code
         const errorMessage = error.message
@@ -40,15 +42,8 @@ export const useAuthStore = defineStore('authStore', {
       }
     },
     async loginUser(credentials) {
-      console.log('logging in')
       try {
-        const userCredentials = await signInWithEmailAndPassword(
-          auth,
-          credentials.email,
-          credentials.password
-        )
-
-        return userCredentials.user ? userCredentials.user : undefined
+        await signInWithEmailAndPassword(auth, credentials.email, credentials.password)
       } catch (error) {
         const errorCode = error.code
         const errorMessage = error.message
@@ -58,7 +53,6 @@ export const useAuthStore = defineStore('authStore', {
     async logoutUser() {
       try {
         await signOut(auth)
-        console.log('after sign out', auth)
       } catch (error) {
         const errorCode = error.code
         const errorMessage = error.message

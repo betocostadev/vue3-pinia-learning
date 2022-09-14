@@ -114,7 +114,6 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const register = ref(false)
@@ -123,19 +122,13 @@ const formTitle = computed(() => (register.value ? 'Register' : 'Login'))
 
 const authStore = useAuthStore()
 
-const router = useRouter()
-
-const onSubmit = async (e) => {
-  // e.preventDefault()
+const onSubmit = async () => {
   if (register.value) {
     if (!registerBtnDisabled.value) {
       await authStore.registerUser(credentials)
     }
   } else {
-    const loggedUser = await authStore.loginUser(credentials)
-    if (loggedUser) {
-      router.push({ name: 'notes' })
-    }
+    await authStore.loginUser(credentials)
   }
 }
 
