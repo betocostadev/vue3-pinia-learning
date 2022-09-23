@@ -16,8 +16,10 @@ import {
 } from 'firebase/firestore'
 import { db } from '../utils/functions/firebase'
 
-const notesCollectionRef = collection(db, 'notes')
-const notesCollectionQuery = query(notesCollectionRef, orderBy('ts', 'desc'))
+import { useAuthStore } from './auth'
+
+let notesCollectionRef = null
+let notesCollectionQuery = null
 // const notesCollectionQuery = query(notesCollectionRef, orderBy('id', 'desc'), limit(2))
 
 export const useNotesStore = defineStore('notes', {
@@ -29,6 +31,14 @@ export const useNotesStore = defineStore('notes', {
   },
 
   actions: {
+    init() {
+      const authStore = useAuthStore()
+      // initialize db refs
+      notesCollectionRef = collection(db, 'users', authStore.user.id, 'notes')
+      notesCollectionQuery = query(notesCollectionRef, orderBy('ts', 'desc'))
+      this.getNotes()
+    },
+
     async getNotes() {
       this.notesLoaded = false
       // This commented code is related to Read Data Once in Firestore, no realtime updates
