@@ -18,8 +18,9 @@ import { db } from '../utils/functions/firebase'
 
 import { useAuthStore } from './auth'
 
-let notesCollectionRef = null
-let notesCollectionQuery = null
+let notesCollectionRef, 
+  notesCollectionQuery, 
+  getNotesSnapshot = null
 // const notesCollectionQuery = query(notesCollectionRef, orderBy('id', 'desc'), limit(2))
 
 export const useNotesStore = defineStore('notes', {
@@ -53,7 +54,9 @@ export const useNotesStore = defineStore('notes', {
       //   this.notes.push(note)
       // })
 
-      const unsubscribe = onSnapshot(notesCollectionQuery, (querySnapshot) => {
+      if (getNotesSnapshot) getNotesSnapshot() // If it is listening, will unbsuscribe first
+
+      getNotesSnapshot = onSnapshot(notesCollectionQuery, (querySnapshot) => {
         const notes = []
         querySnapshot.forEach((doc) => {
           const note = {
@@ -69,8 +72,12 @@ export const useNotesStore = defineStore('notes', {
       })
 
       // onSnapshot will keep listening for changes while the app is running
-      // If there was a need to stop this, it could just use the method below
-      // unsubscribe()
+      // If there was a need to stop this, it could just call it again and it will unsubscribe.
+
+    },
+
+    clearNotes() {
+      this.notes = []
     },
 
     async addNote(content) {

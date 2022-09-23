@@ -29,9 +29,11 @@ export const useAuthStore = defineStore('authStore', {
         } else {
           this.user = {}
           this.router.replace({ name: 'auth' })
+          notesStore.clearNotes()
         }
       })
     },
+
     async registerUser(credentials) {
       try {
         const newUser = await createUserWithEmailAndPassword(
@@ -46,6 +48,7 @@ export const useAuthStore = defineStore('authStore', {
         console.log(errorCode, errorMessage)
       }
     },
+    
     async loginUser(credentials) {
       try {
         await signInWithEmailAndPassword(auth, credentials.email, credentials.password)
