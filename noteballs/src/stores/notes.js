@@ -78,6 +78,7 @@ export const useNotesStore = defineStore('notes', {
 
     clearNotes() {
       this.notes = []
+      if (getNotesSnapshot) getNotesSnapshot()
     },
 
     async addNote(content) {
