@@ -69,6 +69,8 @@ export const useNotesStore = defineStore('notes', {
 
         this.notes = notes
         this.notesLoaded = true
+      }, error => {
+        console.log('error.message:', error.message)
       })
 
       // onSnapshot will keep listening for changes while the app is running
